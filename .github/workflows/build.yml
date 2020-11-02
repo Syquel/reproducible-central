@@ -1,0 +1,32 @@
+name: CI Workflow
+
+on: [push, pull_request]
+
+jobs:
+  ci-build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: "Setup Environment"
+        run: sudo apt install --assume-yes dos2unix
+      - id: detect-changed-files
+        name: "Detect changed files"
+        uses: jitterbit/get-changed-files@v1
+        continue-on-error: true
+        with:
+          format: "csv"
+      - name: "Rebuild changed build specifications"
+        run: |
+          readarray -d ',' -t modifiedFiles < <(printf '%s,' '${{ steps.detect-changed-files.outputs.added_modified }}')
+
+          for modifiedFiles in "${modifiedFiles[@]}"; do
+            if ! printf "${modifiedFiles}" '%s' | grep -Eq "^content/.*\.buildspec$"; then
+              continue
+            fi
+
+            echo "Rebuilding ${modifiedFiles}"
+            ./rebuild.sh "${modifiedFiles}" || exit $?
+          done
