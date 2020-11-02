@@ -1,0 +1,16 @@
+groupId=de.syquel.maven.reactorstate
+artifactId=reactorstate-maven-project
+display=${groupId}:${artifactId}
+version=1.0.0-beta.0
+
+gitRepo=https://github.com/Syquel/reactorstate-maven.git
+gitTag=${version}
+
+tool=mvn
+jdk=11
+newline=lf
+
+command="mvn -DskipTests -Dmaven.javadoc.skip package"
+buildinfo=target/${artifactId}-${version}.buildinfo
+
+issue=

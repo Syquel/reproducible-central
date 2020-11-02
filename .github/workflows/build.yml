@@ -28,5 +28,5 @@ jobs:
             fi
 
             echo "Rebuilding ${modifiedFiles}"
-            ./rebuild.sh "${modifiedFiles}" || exit $?
+            ${{ github.workspace }}/rebuild.sh "${modifiedFiles}" || exit $?
           done
